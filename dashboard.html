@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - Agomoni</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins','Noto Sans Bengali',sans-serif;
+    background: linear-gradient(rgba(0,0,0,0.8),rgba(0,0,0,0.9)),
+                url("https://images.unsplash.com/photo-1658387560959-e9b4898ee74c?q=80&w=735&auto=format&fit=crop");
+    background-size:cover;
+    color:white;
+}
+
+/* NAVBAR */
+nav{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 35px;
+    background:rgba(0,0,0,0.6);
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-right:15px;
+}
+
+nav a:hover{color:#ff7a00;}
+
+.lang-btn{
+    border:1px solid white;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+/* MAIN */
+.container{
+    padding:100px 40px 40px;
+}
+
+/* WELCOME */
+.welcome{
+    font-size:24px;
+    margin-bottom:20px;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:20px;
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.08);
+    padding:20px;
+    border-radius:15px;
+    border-left:4px solid #ff7a00;
+}
+
+/* BUTTONS */
+.actions{
+    margin-top:25px;
+    display:flex;
+    gap:15px;
+}
+
+.btn{
+    padding:12px 20px;
+    background:linear-gradient(45deg,#ff7a00,#ff4500);
+    border:none;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+}
+
+/* RECENT */
+.recent{
+    margin-top:30px;
+}
+
+.ride{
+    background:rgba(255,255,255,0.08);
+    padding:15px;
+    margin-top:10px;
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div>
+<a href="HomePage.html" id="navHome">Home</a>
+<a href="dashboard.html" id="navDash">Dashboard</a>
+<a href="history.html" id="navHistory">History</a>
+</div>
+
+<div class="lang-btn" onclick="toggleLanguage()" id="langBtn">EN</div>
+</nav>
+
+<div class="container">
+
+<div class="welcome" id="welcome">Welcome, User </div>
+
+<!-- STATS -->
+<div class="grid">
+
+<div class="card">
+<h3 id="rides">Total Rides</h3>
+<p id="totalRides">0</p>
+</div>
+
+<div class="card">
+<h3 id="spent">Money Spent</h3>
+<p id="moneySpent">₹0</p>
+</div>
+
+<div class="card">
+<h3 id="saved">Saved Money</h3>
+<p id="savedMoney">₹0</p>
+</div>
+
+<div class="card">
+<h3 id="fav">Favorite Ride</h3>
+<p id="favRide">-</p>
+</div>
+
+</div>
+
+<!-- ACTIONS -->
+<div class="actions">
+<button class="btn" onclick="goBook()" id="bookBtn">Book Ride</button>
+<button class="btn" onclick="goSuggest()" id="suggestBtn">Get Suggestion</button>
+</div>
+
+<!-- RECENT -->
+<div class="recent">
+<h3 id="recentTitle">Recent Rides</h3>
+<div id="recentRides"></div>
+</div>
+
+</div>
+
+<script>
+let currentLang=localStorage.getItem("lang")||"en";
+
+/* LANGUAGE */
+const t={
+en:{
+welcome:"Welcome, User ",
+rides:"Total Rides",
+spent:"Money Spent",
+saved:"Saved Money",
+fav:"Favorite Ride",
+book:"Book Ride",
+suggest:"Get Suggestion",
+recent:"Recent Rides",
+home:"Home",
+dash:"Dashboard",
+history:"History"
+},
+bn:{
+welcome:"স্বাগতম ",
+rides:"মোট রাইড",
+spent:"মোট খরচ",
+saved:"সাশ্রয়",
+fav:"পছন্দের যান",
+book:"রাইড বুক করুন",
+suggest:"সাজেশন নিন",
+recent:"সাম্প্রতিক রাইড",
+home:"হোম",
+dash:"ড্যাশবোর্ড",
+history:"ইতিহাস"
+}
+};
+
+function toggleLanguage(){
+currentLang=currentLang==="en"?"bn":"en";
+localStorage.setItem("lang",currentLang);
+applyLang();
+loadDashboard();
+}
+
+function applyLang(){
+let lang=t[currentLang];
+
+document.getElementById("welcome").innerText=lang.welcome;
+document.getElementById("rides").innerText=lang.rides;
+document.getElementById("spent").innerText=lang.spent;
+document.getElementById("saved").innerText=lang.saved;
+document.getElementById("fav").innerText=lang.fav;
+
+document.getElementById("bookBtn").innerText=lang.book;
+document.getElementById("suggestBtn").innerText=lang.suggest;
+document.getElementById("recentTitle").innerText=lang.recent;
+
+document.getElementById("navHome").innerText=lang.home;
+document.getElementById("navDash").innerText=lang.dash;
+document.getElementById("navHistory").innerText=lang.history;
+
+document.getElementById("langBtn").innerText=currentLang==="en"?"EN":"বাংলা";
+}
+
+/* 🔥 MAIN LOGIC */
+function loadDashboard(){
+
+let rides = JSON.parse(localStorage.getItem("rides")) || [];
+
+/* CALCULATIONS */
+let totalRides = rides.length;
+let moneySpent = 0;
+let saved = 0;
+let count = {bike:0, auto:0, car:0};
+
+rides.forEach(r=>{
+    moneySpent += r.fare;
+    count[r.vehicle]++;
+
+    if(r.vehicle==="bike") saved += 50;
+    if(r.vehicle==="auto") saved += 30;
+});
+
+/* FAVORITE */
+let fav="None";
+if(rides.length>0){
+    fav = Object.keys(count).reduce((a,b)=>
+        count[a]>count[b]?a:b
+    );
+}
+
+/* UPDATE UI */
+document.getElementById("totalRides").innerText = totalRides;
+document.getElementById("moneySpent").innerText = "₹"+moneySpent;
+document.getElementById("savedMoney").innerText = "₹"+saved;
+document.getElementById("favRide").innerText = fav.toUpperCase();
+
+/* RECENT RIDES */
+let recentContainer=document.getElementById("recentRides");
+recentContainer.innerHTML="";
+
+rides.slice().reverse().slice(0,3).forEach(r=>{
+    let html=`
+    <div class="ride">
+        📍 ${r.from} → ${r.to} | ₹${r.fare}
+    </div>`;
+    recentContainer.innerHTML+=html;
+});
+
+}
+
+/* NAVIGATION */
+function goBook(){
+window.location.href="book.html";
+}
+
+function goSuggest(){
+window.location.href="suggestion.html";
+}
+
+/* INIT */
+window.onload=function(){
+applyLang();
+loadDashboard();
+};
+</script>
+
+</body>
+</html>

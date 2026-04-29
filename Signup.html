@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup - Agomoni</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Poppins','Noto Sans Bengali',sans-serif;
+background: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.85)),
+url("https://plus.unsplash.com/premium_photo-1661346072040-153cb84a3696?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+background-size:cover;
+color:white;
+}
+
+nav{
+display:flex;
+justify-content:space-between;
+padding:15px 40px;
+background:rgba(0,0,0,0.6);
+}
+
+.left{display:flex;gap:20px;}
+a{color:white;text-decoration:none;}
+
+.lang-btn{
+border:1px solid white;
+padding:6px 12px;
+border-radius:20px;
+cursor:pointer;
+}
+
+.container{
+display:flex;
+justify-content:center;
+align-items:center;
+height:90vh;
+}
+
+.card{
+background:rgba(255,255,255,0.08);
+padding:35px;
+border-radius:15px;
+width:380px;
+text-align:center;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-bottom:12px;
+border:none;
+border-radius:8px;
+background:rgba(255,255,255,0.1);
+color:white;
+}
+
+.btn{
+width:100%;
+padding:12px;
+background:linear-gradient(45deg,#ff7a00,#ff4500);
+border:none;
+border-radius:8px;
+color:white;
+font-weight:bold;
+}
+
+.small{margin-top:10px;}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div class="left">
+<div>Agomoni</div>
+<a href="HomePage.html" id="homeBtn">Home</a>
+</div>
+<div class="lang-btn" onclick="toggleLanguage()" id="langBtn">EN</div>
+</nav>
+
+<div class="container">
+<div class="card">
+
+<h2 id="title">Create Account</h2>
+
+<input id="name" placeholder="Name">
+<input id="email" placeholder="Email">
+<input id="pass" type="password" placeholder="Password">
+<input id="confirm" type="password" placeholder="Confirm Password">
+
+<button class="btn" id="signupBtn" onclick="signup()">Sign Up</button>
+
+<p class="small" id="loginText">
+Already have account? <a href="Login.html">Login</a>
+</p>
+
+</div>
+</div>
+
+<script>
+let currentLang=localStorage.getItem("lang")||"en";
+
+const t={
+en:{
+title:"Create Account",
+name:"Name",
+email:"Email",
+pass:"Password",
+confirm:"Confirm Password",
+signup:"Sign Up",
+login:"Already have account?",
+loginBtn:"Login",
+home:"Home"
+},
+bn:{
+title:"অ্যাকাউন্ট তৈরি করুন",
+name:"নাম",
+email:"ইমেল",
+pass:"পাসওয়ার্ড",
+confirm:"পাসওয়ার্ড নিশ্চিত করুন",
+signup:"সাইন আপ",
+login:"অ্যাকাউন্ট আছে?",
+loginBtn:"লগইন",
+home:"হোম"
+}
+};
+
+function toggleLanguage(){
+currentLang=currentLang==="en"?"bn":"en";
+localStorage.setItem("lang",currentLang);
+applyLang();
+}
+
+function applyLang(){
+let lang=t[currentLang];
+
+document.getElementById("title").innerText=lang.title;
+document.getElementById("name").placeholder=lang.name;
+document.getElementById("email").placeholder=lang.email;
+document.getElementById("pass").placeholder=lang.pass;
+document.getElementById("confirm").placeholder=lang.confirm;
+document.getElementById("signupBtn").innerText=lang.signup;
+document.getElementById("homeBtn").innerText=lang.home;
+
+document.getElementById("loginText").innerHTML=
+lang.login+' <a href="login.html">'+lang.loginBtn+'</a>';
+
+document.getElementById("langBtn").innerText=currentLang==="en"?"EN":"বাংলা";
+}
+
+function signup(){
+let p=document.getElementById("pass").value;
+let c=document.getElementById("confirm").value;
+
+if(p!==c){alert("Password mismatch");return;}
+
+alert("Account Created!");
+}
+
+window.onload=applyLang;
+</script>
+
+</body>
+</html>

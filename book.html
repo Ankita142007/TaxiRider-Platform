@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Ride - Agomoni</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins','Noto Sans Bengali',sans-serif;
+    background: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.85)),
+                url("https://images.unsplash.com/photo-1658387560959-e9b4898ee74c?q=80&w=735&auto=format&fit=crop");
+    background-size:cover;
+    color:white;
+}
+
+/* NAVBAR */
+nav{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 35px;
+    background:rgba(0,0,0,0.6);
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-right:15px;
+}
+
+nav a:hover{color:#ff7a00;}
+
+.lang-btn{
+    border:1px solid white;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+/* CARD */
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:90vh;
+}
+
+.card{
+    background:rgba(255,255,255,0.08);
+    padding:30px;
+    border-radius:15px;
+    width:400px;
+    backdrop-filter:blur(10px);
+}
+
+/* INPUT */
+.input-box{
+    margin-bottom:15px;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    background:rgba(255,255,255,0.1);
+    color:white;
+}
+
+select option{
+    background:#1a1a1a;
+    color:white;
+}
+
+/* BUTTON */
+.btn{
+    width:100%;
+    padding:12px;
+    background:linear-gradient(45deg,#ff7a00,#ff4500);
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* FARE */
+.fare{
+    margin:15px 0;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div>
+<a href="HomePage.html" id="navHome">Home</a>
+<a href="book.html" id="navBook">Book</a>
+</div>
+
+<div class="lang-btn" onclick="toggleLanguage()" id="langBtn">EN</div>
+</nav>
+
+<div class="container">
+<div class="card">
+
+<h2 id="title">Book Your Ride</h2>
+
+<div class="input-box">
+<input id="pickup" placeholder="Pickup Location">
+</div>
+
+<div class="input-box">
+<input id="drop" placeholder="Drop Location">
+</div>
+
+<div class="input-box">
+<select id="vehicle">
+<option value="bike">Bike</option>
+<option value="auto">Auto</option>
+<option value="car">Car</option>
+</select>
+</div>
+
+<div class="input-box">
+<select id="traffic">
+<option value="low">Low Traffic</option>
+<option value="medium">Medium Traffic</option>
+<option value="high">High Traffic</option>
+</select>
+</div>
+
+<div class="input-box">
+<select id="weather">
+<option value="clear">Clear Weather</option>
+<option value="rain">Rain</option>
+<option value="storm">Storm</option>
+</select>
+</div>
+
+<div class="fare" id="fareText">Estimated Fare: ₹0</div>
+
+<button class="btn" id="calcBtn" onclick="calculateFare()">Calculate Fare</button>
+<br><br>
+<button class="btn" id="confirmBtn" onclick="confirmRide()">Confirm Ride</button>
+
+</div>
+</div>
+
+<script>
+let currentLang=localStorage.getItem("lang")||"en";
+let currentFare = 0; // 🔥 STORE CALCULATED FARE
+
+const t={
+en:{
+title:"Book Your Ride",
+pickup:"Pickup Location",
+drop:"Drop Location",
+calc:"Calculate Fare",
+confirm:"Confirm Ride",
+fare:"Estimated Fare: ₹",
+home:"Home",
+book:"Book",
+alert:"Ride Confirmed!",
+error:"Please fill all fields and calculate fare"
+},
+bn:{
+title:"রাইড বুক করুন",
+pickup:"পিকআপ লোকেশন",
+drop:"ড্রপ লোকেশন",
+calc:"ভাড়া হিসাব করুন",
+confirm:"রাইড নিশ্চিত করুন",
+fare:"ভাড়া: ",
+home:"হোম",
+book:"বুকিং",
+alert:"রাইড নিশ্চিত হয়েছে!",
+error:"সব তথ্য পূরণ করুন এবং ভাড়া হিসাব করুন"
+}
+};
+
+function toggleLanguage(){
+currentLang=currentLang==="en"?"bn":"en";
+localStorage.setItem("lang",currentLang);
+applyLang();
+}
+
+function applyLang(){
+let lang=t[currentLang];
+
+document.getElementById("title").innerText=lang.title;
+document.getElementById("pickup").placeholder=lang.pickup;
+document.getElementById("drop").placeholder=lang.drop;
+document.getElementById("calcBtn").innerText=lang.calc;
+document.getElementById("confirmBtn").innerText=lang.confirm;
+document.getElementById("fareText").innerText=lang.fare+"0";
+
+document.getElementById("navHome").innerText=lang.home;
+document.getElementById("navBook").innerText=lang.book;
+
+document.getElementById("langBtn").innerText=currentLang==="en"?"EN":"বাংলা";
+}
+
+/* CALCULATE FARE */
+function calculateFare(){
+
+let vehicle=document.getElementById("vehicle").value;
+let traffic=document.getElementById("traffic").value;
+let weather=document.getElementById("weather").value;
+
+let base=0;
+
+/* VEHICLE */
+if(vehicle==="bike") base=50;
+else if(vehicle==="auto") base=100;
+else if(vehicle==="car") base=200;
+
+/* TRAFFIC */
+if(traffic==="low") base+=0;
+else if(traffic==="medium") base+=20;
+else if(traffic==="high") base+=50;
+
+/* WEATHER */
+if(weather==="clear") base+=0;
+else if(weather==="rain") base+=30;
+else if(weather==="storm") base+=60;
+
+/* SAVE FARE */
+currentFare = base;
+
+/* SHOW */
+document.getElementById("fareText").innerText =
+    t[currentLang].fare + base;
+}
+
+/* CONFIRM RIDE (🔥 MAIN LOGIC) */
+function confirmRide(){
+
+let pickup=document.getElementById("pickup").value.trim();
+let drop=document.getElementById("drop").value.trim();
+let vehicle=document.getElementById("vehicle").value;
+
+/* VALIDATION */
+if(pickup==="" || drop==="" || currentFare===0){
+alert(t[currentLang].error);
+return;
+}
+
+/* GET OLD DATA */
+let rides = JSON.parse(localStorage.getItem("rides")) || [];
+
+/* ADD NEW RIDE */
+rides.push({
+  from: pickup,
+  to: drop,
+  fare: currentFare,
+  vehicle: vehicle,
+  date: new Date().toLocaleString()
+});
+
+/* SAVE */
+localStorage.setItem("rides", JSON.stringify(rides));
+
+/* SUCCESS */
+alert(t[currentLang].alert);
+
+/* REDIRECT */
+window.location.href="dashboard.html";
+}
+
+window.onload=applyLang;
+</script>
+
+</body>
+</html>

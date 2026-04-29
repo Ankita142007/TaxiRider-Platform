@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How IT Works - Agomoni</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins','Noto Sans Bengali',sans-serif;
+    background:#0e0e0e;
+    color:white;
+}
+
+
+nav{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 35px;
+    background:black;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-right:15px;
+}
+
+nav a:hover{color:#ff7a00;}
+
+.lang-btn{
+    border:1px solid white;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+/* HERO */
+.hero{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:100px 40px 50px;
+    gap:40px;
+}
+
+.hero-text{
+    max-width:500px;
+}
+
+.hero h1{
+    font-size:42px;
+    margin-bottom:15px;
+}
+
+.hero p{
+    color:#ccc;
+    margin-bottom:20px;
+}
+
+.hero input{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:8px;
+    border:none;
+    background:#1a1a1a;
+    color:white;
+}
+
+.btn{
+    padding:12px 20px;
+    background:#ff7a00;
+    border:none;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+}
+
+.hero img{
+    width:400px;
+    border-radius:12px;
+}
+
+/* SECTION */
+.section{
+    background:white;
+    color:black;
+    padding:60px 40px;
+}
+
+.section h2{
+    font-size:32px;
+    margin-bottom:15px;
+}
+
+.section p{
+    color:#555;
+    margin-bottom:40px;
+}
+
+/* TIMELINE */
+.timeline{
+    position:relative;
+    margin-left:20px;
+}
+
+.timeline::before{
+    content:"";
+    position:absolute;
+    left:10px;
+    top:0;
+    width:2px;
+    height:100%;
+    background:#ccc;
+}
+
+.step{
+    margin-bottom:40px;
+    padding-left:40px;
+    position:relative;
+}
+
+.step::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:5px;
+    width:15px;
+    height:15px;
+    background:#ff7a00;
+    border-radius:50%;
+}
+
+.step h3{
+    margin-bottom:8px;
+}
+
+.step p{
+    color:#555;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<nav>
+<div>
+<a href="HomePage.html" id="navHome">Home</a>
+<a href="how-it-works.html" id="navHow">How It Works</a>
+</div>
+
+<div class="lang-btn" onclick="toggleLanguage()" id="langBtn">EN</div>
+</nav>
+
+<!-- HERO SECTION -->
+<div class="hero">
+
+<div class="hero-text">
+<h1 id="title">How Agomoni Works</h1>
+
+<p id="desc">
+Understand how Agomoni connects you with the best ride based on traffic and conditions.
+</p>
+
+<input placeholder="Enter pickup location" id="pickup">
+<input placeholder="Enter destination" id="drop">
+
+<button class="btn" id="btn">See Prices</button>
+</div>
+
+<img src="https://cn-geo1.uber.com/image-proc/crop/resizecrop/udam/format=auto/width=1152/height=768/srcb64=aHR0cHM6Ly90Yi1zdGF0aWMudWJlci5jb20vcHJvZC91ZGFtLWFzc2V0cy81NWNmMGNiMi1iODgzLTQzMzEtYjMwOS03ZmJmNmU3Zjg3ZDUucG5n">
+
+</div>
+
+<!-- SECOND SECTION -->
+<div class="section">
+
+<h2 id="guideTitle">A quick guide to Agomoni</h2>
+<p id="guideDesc">Here’s how our system works step by step:</p>
+
+<div class="timeline">
+
+<div class="step">
+<h3 id="s1">1. Enter Locations</h3>
+<p id="s1d">Enter your pickup and drop location to begin.</p>
+</div>
+
+<div class="step">
+<h3 id="s2">2. Choose Vehicle</h3>
+<p id="s2d">Select bike, auto or car based on your need.</p>
+</div>
+
+<div class="step">
+<h3 id="s3">3. Analyze Conditions</h3>
+<p id="s3d">System checks traffic and weather.</p>
+</div>
+
+<div class="step">
+<h3 id="s4">4. Calculate Fare</h3>
+<p id="s4d">Fare is calculated instantly.</p>
+</div>
+
+<div class="step">
+<h3 id="s5">5. Confirm Ride</h3>
+<p id="s5d">Confirm and start your journey.</p>
+</div>
+
+</div>
+
+</div>
+
+<script>
+let currentLang=localStorage.getItem("lang")||"en";
+
+const t={
+en:{
+title:"How Agomoni Works",
+desc:"Understand how Agomoni connects you with the best ride based on traffic and conditions.",
+btn:"See Prices",
+guide:"A quick guide to Agomoni",
+guideDesc:"Here’s how our system works step by step:",
+s1:"1. Enter Locations",
+s1d:"Enter your pickup and drop location to begin.",
+s2:"2. Choose Vehicle",
+s2d:"Select bike, auto or car based on your need.",
+s3:"3. Analyze Conditions",
+s3d:"System checks traffic and weather.",
+s4:"4. Calculate Fare",
+s4d:"Fare is calculated instantly.",
+s5:"5. Confirm Ride",
+s5d:"Confirm and start your journey.",
+home:"Home",
+how:"How It Works"
+},
+bn:{
+title:"Agomoni কীভাবে কাজ করে",
+desc:"Agomoni কীভাবে আপনাকে সেরা রাইড দেয় তা জানুন।",
+btn:"দাম দেখুন",
+guide:"Agomoni গাইড",
+guideDesc:"ধাপে ধাপে কাজ:",
+s1:"১. লোকেশন দিন",
+s1d:"পিকআপ ও ড্রপ দিন।",
+s2:"২. যানবাহন নির্বাচন",
+s2d:"বাইক/অটো/গাড়ি নির্বাচন করুন।",
+s3:"৩. পরিস্থিতি বিশ্লেষণ",
+s3d:"ট্রাফিক ও আবহাওয়া দেখা হয়।",
+s4:"৪. ভাড়া হিসাব",
+s4d:"ভাড়া হিসাব করা হয়।",
+s5:"৫. রাইড নিশ্চিত",
+s5d:"রাইড শুরু করুন।",
+home:"হোম",
+how:"কিভাবে কাজ করে"
+}
+};
+
+function toggleLanguage(){
+currentLang=currentLang==="en"?"bn":"en";
+localStorage.setItem("lang",currentLang);
+applyLang();
+}
+
+function applyLang(){
+let lang=t[currentLang];
+
+document.getElementById("title").innerText=lang.title;
+document.getElementById("desc").innerText=lang.desc;
+document.getElementById("btn").innerText=lang.btn;
+
+document.getElementById("guideTitle").innerText=lang.guide;
+document.getElementById("guideDesc").innerText=lang.guideDesc;
+
+document.getElementById("s1").innerText=lang.s1;
+document.getElementById("s1d").innerText=lang.s1d;
+
+document.getElementById("s2").innerText=lang.s2;
+document.getElementById("s2d").innerText=lang.s2d;
+
+document.getElementById("s3").innerText=lang.s3;
+document.getElementById("s3d").innerText=lang.s3d;
+
+document.getElementById("s4").innerText=lang.s4;
+document.getElementById("s4d").innerText=lang.s4d;
+
+document.getElementById("s5").innerText=lang.s5;
+document.getElementById("s5d").innerText=lang.s5d;
+
+document.getElementById("navHome").innerText=lang.home;
+document.getElementById("navHow").innerText=lang.how;
+
+document.getElementById("langBtn").innerText=currentLang==="en"?"EN":"বাংলা";
+}
+
+window.onload=applyLang;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agomoni</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family: 'Poppins', 'Noto Sans Bengali', sans-serif;
+}
+
+/* NAVBAR */
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 35px;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    position:fixed;
+    width:100%;
+    top:0;
+    z-index:1000;
+}
+
+.logo{
+    color:white;
+    font-weight:bold;
+    font-size:20px;
+}
+
+nav ul{
+    display:flex;
+    gap:15px;
+    list-style:none;
+    align-items:center;
+}
+
+nav ul li a{
+    text-decoration:none;
+    color:white;
+    font-size:14px;
+    transition:0.3s;
+}
+
+nav ul li a:hover{
+    color:#ff7a00;
+}
+
+/* Buttons */
+.login{
+    border:1px solid white;
+    padding:5px 12px;
+    border-radius:20px;
+}
+
+.signup{
+    background:#ff7a00;
+    padding:6px 14px;
+    border-radius:20px;
+}
+
+/* Language */
+.lang-btn{
+    border:1px solid white;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+    color:white;
+}
+
+/* HERO */
+.hero{
+    height:100vh;
+    background: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.6)),
+                url("https://images.unsplash.com/photo-1658387560959-e9b4898ee74c?q=80&w=735&auto=format&fit=crop");
+    background-size:cover;
+    background-position:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    color:white;
+}
+
+.container{
+    width:90%;
+    max-width:500px;
+}
+
+/* TITLE */
+.title{
+    margin-bottom:10px;
+    font-size:36px;
+    font-weight:600;
+    white-space:nowrap;
+    overflow:hidden;
+    border-right:3px solid #ff7a00;
+
+    background: linear-gradient(45deg,#ff7a00,#ff4500);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    width:0;
+    animation: typing 3s steps(30,end) forwards,
+               blink 0.7s infinite;
+}
+
+/* SLOGAN */
+.slogan{
+    font-size:14px;
+    color:#ddd;
+    margin-bottom:20px;
+}
+
+/* Typing */
+@keyframes typing{
+    from{width:0}
+    to{width:100%}
+}
+
+@keyframes blink{
+    50%{border-color:transparent;}
+}
+
+/* INPUT */
+.input-box{
+    display:flex;
+    align-items:center;
+    background: rgba(255,255,255,0.08);
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+
+.input-box i{
+    margin-right:10px;
+    color:#ff7a00;
+}
+
+.input-box input{
+    border:none;
+    outline:none;
+    width:100%;
+    background:transparent;
+    color:white;
+}
+
+/* BUTTON */
+.btn{
+    width:100%;
+    padding:15px;
+    background:linear-gradient(45deg,#ff7a00,#ff4500);
+    border:none;
+    border-radius:10px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn:hover{
+    transform:scale(1.05);
+}
+
+/* ERROR */
+.error{
+    color:red;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo">Agomoni</div>
+    <ul>
+        <li><a href="HomePage.html" id="navHome">Home</a></li>
+        <li><a href="book.html" id="navBook">Book</a></li>
+        <li><a href="suggestion.html" id="navSuggest">Suggestions</a></li>
+        <li><a href="fare.html" id="navFare">Fare</a></li>
+        <li><a href="dashboard.html" id="navDash">Dashboard</a></li>
+        <li><a href="history.html" id="navHistory">History</a></li>
+        <li><a href="support.html" id="navSupport">Support</a></li>
+        <li><a href="HowItWorks.html" id="navWorks">How Agomoni Works</a></li>
+
+        <li><a href="login.html" id="navLogin" class="login">Login</a></li>
+        <li><a href="signup.html" id="navSignup" class="signup">Sign Up</a></li>
+
+        <li class="lang-btn" onclick="toggleLanguage()" id="langBtn">EN</li>
+    </ul>
+</nav>
+
+<div class="hero">
+    <div class="container">
+
+        <h1 id="title" class="title"></h1>
+        <div class="slogan"> The Joy of Arrival </div>
+
+        <div class="error" id="errorMsg">Fill all fields</div>
+
+        <div class="input-box">
+            <i class="fa fa-map-marker-alt"></i>
+            <input id="pickup" placeholder="Enter Pickup Location">
+        </div>
+
+        <div class="input-box">
+            <i class="fa fa-dot-circle"></i>
+            <input id="drop" placeholder="Enter Drop Location">
+        </div>
+
+        <button class="btn" id="bookBtn" onclick="bookRide()">Book Ride</button>
+    </div>
+</div>
+
+<script>
+let currentLang = localStorage.getItem("lang") || "en";
+
+const t = {
+    en:{
+        title:"Ride Smarter, Reach Faster",
+        book:"Book Ride",
+        pickup:"Enter Pickup Location",
+        drop:"Enter Drop Location",
+        error:"Fill all fields",
+        navHome:"Home",
+        navBook:"Book",
+        navSuggest:"Suggestions",
+        navFare:"Fare",
+        navDash:"Dashboard",
+        navHistory:"History",
+        navSupport:"Support",
+        navLogin:"Login",
+        navSignup:"Sign Up"
+    },
+    bn:{
+        title:"স্মার্টভাবে চলুন, দ্রুত পৌঁছান",
+        book:"রাইড বুক করুন",
+        pickup:"পিকআপ লোকেশন লিখুন",
+        drop:"ড্রপ লোকেশন লিখুন",
+        error:"সব তথ্য পূরণ করুন",
+        navHome:"হোম",
+        navBook:"বুকিং",
+        navSuggest:"সাজেশন",
+        navFare:"ভাড়া",
+        navDash:"ড্যাশবোর্ড",
+        navHistory:"ইতিহাস",
+        navSupport:"সহায়তা",
+        navLogin:"লগইন",
+        navSignup:"সাইন আপ"
+    }
+};
+
+function toggleLanguage(){
+    currentLang = currentLang==="en"?"bn":"en";
+    localStorage.setItem("lang",currentLang);
+    applyLang();
+}
+
+function applyLang(){
+    let lang = t[currentLang];
+
+    const titleEl = document.getElementById("title");
+    titleEl.style.animation = "none";
+    titleEl.offsetHeight;
+    titleEl.style.animation = null;
+
+    titleEl.innerText = lang.title;
+
+    document.getElementById("bookBtn").innerText = lang.book;
+    document.getElementById("pickup").placeholder = lang.pickup;
+    document.getElementById("drop").placeholder = lang.drop;
+    document.getElementById("errorMsg").innerText = lang.error;
+
+    document.getElementById("navHome").innerText = lang.navHome;
+    document.getElementById("navBook").innerText = lang.navBook;
+    document.getElementById("navSuggest").innerText = lang.navSuggest;
+    document.getElementById("navFare").innerText = lang.navFare;
+    document.getElementById("navDash").innerText = lang.navDash;
+    document.getElementById("navHistory").innerText = lang.navHistory;
+    document.getElementById("navSupport").innerText = lang.navSupport;
+    document.getElementById("navLogin").innerText = lang.navLogin;
+    document.getElementById("navSignup").innerText = lang.navSignup;
+
+    document.getElementById("langBtn").innerText = currentLang==="en"?"EN":"বাংলা";
+}
+
+/* ✅ FIXED FUNCTION */
+function bookRide(){
+    let p=document.getElementById("pickup").value.trim();
+    let d=document.getElementById("drop").value.trim();
+
+    if(p===""||d===""){
+        document.getElementById("errorMsg").style.display="block";
+        return;
+    }
+
+    /* Save data */
+    localStorage.setItem("pickup",p);
+    localStorage.setItem("drop",d);
+
+    /* Redirect */
+    window.location.href="book.html";
+}
+
+window.onload=applyLang;
+</script>
+
+</body>
+</html>

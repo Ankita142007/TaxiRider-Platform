@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support - Agomoni</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins','Noto Sans Bengali',sans-serif;
+
+    /* 🔥 YOUR IMAGE + DARK OVERLAY */
+    background:
+    linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.3)),
+    url("https://plus.unsplash.com/premium_photo-1661344239081-7da29101d436?q=80&w=1169&auto=format&fit=crop");
+
+    background-size:cover;
+    background-position:center;
+    color:white;
+}
+
+/* NAVBAR */
+nav{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 35px;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(10px);
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-right:15px;
+}
+
+nav a:hover{color:#ff7a00;}
+
+.lang-btn{
+    border:1px solid white;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+/* MAIN */
+.container{
+    padding:100px 20px;
+    max-width:1000px;
+    margin:auto;
+}
+
+/* TITLE */
+h2{
+    text-align:center;
+    margin-bottom:25px;
+    font-size:28px;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+@media(max-width:768px){
+    .grid{grid-template-columns:1fr;}
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    padding:20px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+/* CONTACT */
+.contact div{
+    margin:8px 0;
+}
+
+/* FORM */
+input,textarea{
+    width:100%;
+    padding:12px;
+    margin:10px 0;
+    border:none;
+    border-radius:8px;
+    background:rgba(255,255,255,0.1);
+    color:white;
+}
+
+textarea{resize:none;height:90px;}
+
+.btn{
+    width:100%;
+    padding:12px;
+    background:linear-gradient(45deg,#ff7a00,#ff4500);
+    border:none;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+}
+
+/* FAQ */
+.faq{
+    margin-top:10px;
+    cursor:pointer;
+    padding:10px;
+    border-radius:8px;
+    background:rgba(255,255,255,0.08);
+}
+
+.answer{
+    display:none;
+    margin-top:5px;
+    color:#ccc;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div>
+<a href="HomePage.html" id="navHome">Home</a>
+<a href="dashboard.html" id="navDash">Dashboard</a>
+<a href="support.html" id="navSupport">Support</a>
+</div>
+
+<div class="lang-btn" onclick="toggleLanguage()" id="langBtn">EN</div>
+</nav>
+
+<div class="container">
+
+<h2 id="title">Support Center</h2>
+
+<div class="grid">
+
+<!-- LEFT -->
+<div class="card">
+
+<h3 id="contactTitle">Contact Info</h3>
+
+<div class="contact">
+<div>📧 support@Agomoni.com</div>
+<div>📞 +91 7384627025</div>
+<div>⏰ 24/7 Available</div>
+</div>
+
+<hr style="margin:15px 0; opacity:0.2;">
+
+<h3 id="faqTitle">FAQs</h3>
+
+<div class="faq" onclick="toggleFAQ(this)">
+❓ How to book a ride?
+<div class="answer">Go to Book page → Enter details → Confirm.</div>
+</div>
+
+<div class="faq" onclick="toggleFAQ(this)">
+❓ How is fare calculated?
+<div class="answer">Based on vehicle, traffic and weather.</div>
+</div>
+
+<div class="faq" onclick="toggleFAQ(this)">
+❓ Which is cheaper: bike or car?
+<div class="answer">Bike is cheaper for short distances & traffic.</div>
+</div>
+
+</div>
+
+<!-- RIGHT -->
+<div class="card">
+
+<h3 id="msgTitle">Send Message</h3>
+
+<input id="name" placeholder="Your Name">
+<input id="email" placeholder="Your Email">
+<textarea id="msg" placeholder="Describe your issue"></textarea>
+
+<button class="btn" onclick="sendMessage()" id="sendBtn">Send Message</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+let currentLang=localStorage.getItem("lang")||"en";
+
+/* LANGUAGE */
+const t={
+en:{
+title:"Support Center",
+contact:"Contact Info",
+faq:"FAQs",
+msg:"Send Message",
+send:"Send Message",
+home:"Home",
+dash:"Dashboard",
+support:"Support",
+alert:"Message Sent!"
+},
+bn:{
+title:"সহায়তা কেন্দ্র",
+contact:"যোগাযোগ",
+faq:"প্রশ্নোত্তর",
+msg:"মেসেজ পাঠান",
+send:"পাঠান",
+home:"হোম",
+dash:"ড্যাশবোর্ড",
+support:"সহায়তা",
+alert:"মেসেজ পাঠানো হয়েছে!"
+}
+};
+
+function toggleLanguage(){
+currentLang=currentLang==="en"?"bn":"en";
+localStorage.setItem("lang",currentLang);
+applyLang();
+}
+
+function applyLang(){
+let lang=t[currentLang];
+
+document.getElementById("title").innerText=lang.title;
+document.getElementById("contactTitle").innerText=lang.contact;
+document.getElementById("faqTitle").innerText=lang.faq;
+document.getElementById("msgTitle").innerText=lang.msg;
+document.getElementById("sendBtn").innerText=lang.send;
+
+document.getElementById("navHome").innerText=lang.home;
+document.getElementById("navDash").innerText=lang.dash;
+document.getElementById("navSupport").innerText=lang.support;
+
+document.getElementById("langBtn").innerText=currentLang==="en"?"EN":"বাংলা";
+}
+
+/* MESSAGE */
+function sendMessage(){
+let name=document.getElementById("name").value;
+let email=document.getElementById("email").value;
+let msg=document.getElementById("msg").value;
+
+if(name===""||email===""||msg===""){
+alert("Fill all fields");
+return;
+}
+
+let data=JSON.parse(localStorage.getItem("supportMsgs"))||[];
+data.push({name,email,msg,date:new Date().toLocaleString()});
+localStorage.setItem("supportMsgs",JSON.stringify(data));
+
+alert(t[currentLang].alert);
+
+document.getElementById("name").value="";
+document.getElementById("email").value="";
+document.getElementById("msg").value="";
+}
+
+/* FAQ */
+function toggleFAQ(el){
+let ans=el.querySelector(".answer");
+ans.style.display=ans.style.display==="block"?"none":"block";
+}
+
+window.onload=applyLang;
+</script>
+
+</body>
+</html>

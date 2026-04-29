@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fare Calculator - Agomoni</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins','Noto Sans Bengali',sans-serif;
+    background: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.85)),
+                url("https://images.unsplash.com/photo-1658387560959-e9b4898ee74c?q=80&w=735&auto=format&fit=crop");
+    background-size:cover;
+    color:white;
+}
+
+/* NAVBAR */
+nav{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 35px;
+    background:rgba(0,0,0,0.6);
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-right:15px;
+}
+
+nav a:hover{color:#ff7a00;}
+
+.lang-btn{
+    border:1px solid white;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+/* CARD */
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:90vh;
+}
+
+.card{
+    background:rgba(255,255,255,0.08);
+    padding:30px;
+    border-radius:15px;
+    width:420px;
+}
+
+/* INPUT */
+.input-box{
+    margin-bottom:15px;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:none;
+    background:rgba(255,255,255,0.1);
+    color:white;
+}
+
+select option{
+    background:#1a1a1a;
+    color:white;
+}
+
+/* BUTTON */
+.btn{
+    width:100%;
+    padding:12px;
+    background:linear-gradient(45deg,#ff7a00,#ff4500);
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* RESULT BOX */
+.result{
+    margin-top:20px;
+    background:rgba(0,0,0,0.4);
+    padding:15px;
+    border-radius:10px;
+    line-height:1.8;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div>
+<a href="HomePage.html" id="navHome">Home</a>
+<a href="book.html" id="navBook">Book</a>
+<a href="fare.html" id="navFare">Fare</a>
+</div>
+
+<div class="lang-btn" onclick="toggleLanguage()" id="langBtn">EN</div>
+</nav>
+
+<div class="container">
+<div class="card">
+
+<h2 id="title">Fare Calculator</h2>
+
+<div class="input-box">
+<input id="distance" placeholder="Distance (km)">
+</div>
+
+<div class="input-box">
+<select id="vehicle">
+<option value="bike">Bike</option>
+<option value="auto">Auto</option>
+<option value="car">Car</option>
+</select>
+</div>
+
+<div class="input-box">
+<select id="traffic">
+<option value="low">Low Traffic</option>
+<option value="medium">Medium Traffic</option>
+<option value="high">High Traffic</option>
+</select>
+</div>
+
+<div class="input-box">
+<select id="weather">
+<option value="clear">Clear Weather</option>
+<option value="rain">Rain</option>
+<option value="storm">Storm</option>
+</select>
+</div>
+
+<button class="btn" id="calcBtn" onclick="calculateFare()">Calculate Fare</button>
+
+<div class="result" id="resultBox" style="display:none;"></div>
+
+</div>
+</div>
+
+<script>
+let currentLang=localStorage.getItem("lang")||"en";
+
+const t={
+en:{
+title:"Fare Calculator",
+distance:"Distance (km)",
+calc:"Calculate Fare",
+home:"Home",
+book:"Book",
+fare:"Fare",
+base:"Base Fare",
+traffic:"Traffic Charge",
+weather:"Weather Charge",
+distanceCost:"Distance Cost",
+total:"Total Fare"
+},
+bn:{
+title:"ভাড়া হিসাব",
+distance:"দূরত্ব (কিমি)",
+calc:"ভাড়া হিসাব করুন",
+home:"হোম",
+book:"বুকিং",
+fare:"ভাড়া",
+base:"বেস ভাড়া",
+traffic:"ট্রাফিক চার্জ",
+weather:"আবহাওয়া চার্জ",
+distanceCost:"দূরত্ব খরচ",
+total:"মোট ভাড়া"
+}
+};
+
+function toggleLanguage(){
+currentLang=currentLang==="en"?"bn":"en";
+localStorage.setItem("lang",currentLang);
+applyLang();
+}
+
+function applyLang(){
+let lang=t[currentLang];
+
+document.getElementById("title").innerText=lang.title;
+document.getElementById("distance").placeholder=lang.distance;
+document.getElementById("calcBtn").innerText=lang.calc;
+
+document.getElementById("navHome").innerText=lang.home;
+document.getElementById("navBook").innerText=lang.book;
+document.getElementById("navFare").innerText=lang.fare;
+
+document.getElementById("langBtn").innerText=currentLang==="en"?"EN":"বাংলা";
+}
+
+/* CALCULATION */
+function calculateFare(){
+
+let d=parseFloat(document.getElementById("distance").value);
+let vehicle=document.getElementById("vehicle").value;
+let traffic=document.getElementById("traffic").value;
+let weather=document.getElementById("weather").value;
+
+if(isNaN(d) || d<=0){
+alert("Enter valid distance");
+return;
+}
+
+let base=0;
+let perKm=0;
+let trafficCharge=0;
+let weatherCharge=0;
+
+/* VEHICLE */
+if(vehicle==="bike"){base=50; perKm=10;}
+if(vehicle==="auto"){base=100; perKm=15;}
+if(vehicle==="car"){base=200; perKm=20;}
+
+/* TRAFFIC */
+if(traffic==="medium") trafficCharge=20;
+if(traffic==="high") trafficCharge=50;
+
+/* WEATHER */
+if(weather==="rain") weatherCharge=30;
+if(weather==="storm") weatherCharge=60;
+
+/* DISTANCE COST */
+let distanceCost=d*perKm;
+
+/* TOTAL */
+let total=base+distanceCost+trafficCharge+weatherCharge;
+
+/* DISPLAY */
+document.getElementById("resultBox").style.display="block";
+
+document.getElementById("resultBox").innerHTML=
+`${t[currentLang].base}: ₹${base}<br>
+${t[currentLang].distanceCost}: ₹${distanceCost}<br>
+${t[currentLang].traffic}: ₹${trafficCharge}<br>
+${t[currentLang].weather}: ₹${weatherCharge}<br>
+<hr>
+<b>${t[currentLang].total}: ₹${total}</b>`;
+}
+
+window.onload=applyLang;
+</script>
+
+</body>
+</html>

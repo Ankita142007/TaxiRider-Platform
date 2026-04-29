@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Agomoni</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins','Noto Sans Bengali',sans-serif;
+    background: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.85)),
+                url("https://plus.unsplash.com/premium_photo-1661346072040-153cb84a3696?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    background-size:cover;
+    background-position:center;
+    color:white;
+}
+
+/* NAVBAR */
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 40px;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(10px);
+}
+
+.left{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+
+.logo{font-weight:bold;}
+
+nav a{
+    text-decoration:none;
+    color:white;
+}
+
+nav a:hover{color:#ff7a00;}
+
+.lang-btn{
+    border:1px solid white;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+/* CENTER */
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:90vh;
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    padding:40px;
+    border-radius:15px;
+    width:360px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+h2{margin-bottom:20px;}
+
+input{
+    width:100%;
+    padding:12px;
+    margin-bottom:15px;
+    border:none;
+    border-radius:8px;
+    background:rgba(255,255,255,0.1);
+    color:white;
+}
+
+.btn{
+    width:100%;
+    padding:12px;
+    background:linear-gradient(45deg,#ff7a00,#ff4500);
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.divider{
+    margin:20px 0;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.divider hr{flex:1;}
+
+.social{
+    background:rgba(255,255,255,0.1);
+    padding:10px;
+    margin:8px 0;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.small{font-size:12px;color:#ccc;margin-top:10px;}
+</style>
+</head>
+
+<body>
+
+<nav>
+    <div class="left">
+        <div class="logo">Agomoni</div>
+        <a href="HomePage.html" id="homeBtn">Home</a>
+    </div>
+    <div class="lang-btn" onclick="toggleLanguage()" id="langBtn">EN</div>
+</nav>
+
+<div class="container">
+    <div class="card">
+
+        <h2 id="title">Login to your account</h2>
+
+        <input id="inputField" placeholder="Email or Phone">
+
+        <button class="btn" id="continueBtn" onclick="login()">Continue</button>
+
+        <div class="divider">
+            <hr><span id="orText">or</span><hr>
+        </div>
+
+        <div class="social" id="googleBtn"><i class="fab fa-google"></i> Continue with Google</div>
+        <div class="social" id="appleBtn"><i class="fab fa-apple"></i> Continue with Apple</div>
+
+        <p class="small" id="signupText">
+            Don't have an account? <a href="Signup.html">Sign Up</a>
+        </p>
+
+    </div>
+</div>
+
+<script>
+let currentLang = localStorage.getItem("lang") || "en";
+
+const t={
+en:{
+title:"Login to your account",
+input:"Email or Phone",
+continue:"Continue",
+or:"or",
+google:"Continue with Google",
+apple:"Continue with Apple",
+signup:"Don't have an account?",
+signupBtn:"Sign Up",
+home:"Home"
+},
+bn:{
+title:"আপনার অ্যাকাউন্টে লগইন করুন",
+input:"ইমেল বা ফোন",
+continue:"চালিয়ে যান",
+or:"অথবা",
+google:"গুগল দিয়ে চালিয়ে যান",
+apple:"অ্যাপল দিয়ে চালিয়ে যান",
+signup:"অ্যাকাউন্ট নেই?",
+signupBtn:"সাইন আপ",
+home:"হোম"
+}
+};
+
+function toggleLanguage(){
+currentLang=currentLang==="en"?"bn":"en";
+localStorage.setItem("lang",currentLang);
+applyLang();
+}
+
+function applyLang(){
+let lang=t[currentLang];
+
+document.getElementById("title").innerText=lang.title;
+document.getElementById("inputField").placeholder=lang.input;
+document.getElementById("continueBtn").innerText=lang.continue;
+document.getElementById("orText").innerText=lang.or;
+document.getElementById("googleBtn").innerHTML='<i class="fab fa-google"></i> '+lang.google;
+document.getElementById("appleBtn").innerHTML='<i class="fab fa-apple"></i> '+lang.apple;
+document.getElementById("homeBtn").innerText=lang.home;
+
+document.getElementById("signupText").innerHTML=
+lang.signup+' <a href="signup.html">'+lang.signupBtn+'</a>';
+
+document.getElementById("langBtn").innerText=currentLang==="en"?"EN":"বাংলা";
+}
+
+function login(){
+let val=document.getElementById("inputField").value;
+if(val===""){alert("Enter details");return;}
+alert("Logging in...");
+}
+
+window.onload=applyLang;
+</script>
+
+</body>
+</html>

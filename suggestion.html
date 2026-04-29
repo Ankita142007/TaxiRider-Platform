@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Suggestion - Agomoni</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins','Noto Sans Bengali',sans-serif;
+    background: linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.85)),
+                url("https://plus.unsplash.com/premium_photo-1728723423241-cf795ae78be2?q=80&w=1170&auto=format&fit=crop");
+    background-size:cover;
+    background-position:center;
+    color:white;
+}
+
+/* NAVBAR */
+nav{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 35px;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(10px);
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-right:15px;
+}
+
+nav a:hover{color:#ff7a00;}
+
+.lang-btn{
+    border:1px solid white;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+/* CENTER */
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:90vh;
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(20px);
+    padding:35px;
+    border-radius:18px;
+    width:420px;
+    border:1px solid rgba(255,255,255,0.1);
+}
+
+/* TITLE */
+h2{
+    margin-bottom:20px;
+    text-align:center;
+}
+
+/* INPUT */
+.input-box{
+    margin-bottom:15px;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    border-radius:10px;
+    border:none;
+    background:rgba(255,255,255,0.1);
+    color:white;
+}
+
+select option{
+    background:#1a1a1a;
+    color:white;
+}
+
+/* BUTTON */
+.btn{
+    width:100%;
+    padding:14px;
+    background:linear-gradient(45deg,#ff7a00,#ff4500);
+    border:none;
+    border-radius:10px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.btn:hover{
+    transform:scale(1.05);
+}
+
+/* RESULT */
+.result{
+    margin-top:20px;
+    padding:20px;
+    border-radius:12px;
+    display:none;
+    background:rgba(0,0,0,0.5);
+    border-left:4px solid #ff7a00;
+}
+
+/* TAG */
+.tag{
+    margin-top:10px;
+    display:inline-block;
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:12px;
+    background:#ff7a00;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div>
+<a href="HomePage.html" id="navHome">Home</a>
+<a href="book.html" id="navBook">Book</a>
+<a href="suggestion.html" id="navSuggest">Suggestions</a>
+</div>
+
+<div class="lang-btn" onclick="toggleLanguage()" id="langBtn">EN</div>
+</nav>
+
+<div class="container">
+<div class="card">
+
+<h2 id="title">Smart Ride Suggestion</h2>
+
+<div class="input-box">
+<input id="distance" placeholder="Distance (km)">
+</div>
+
+<div class="input-box">
+<select id="traffic">
+<option value="low">Low Traffic</option>
+<option value="medium">Medium Traffic</option>
+<option value="high">High Traffic</option>
+</select>
+</div>
+
+<div class="input-box">
+<select id="weather">
+<option value="clear">Clear Weather</option>
+<option value="rain">Rain</option>
+<option value="storm">Storm</option>
+</select>
+</div>
+
+<button class="btn" id="suggestBtn" onclick="suggestRide()">Get Suggestion</button>
+
+<div class="result" id="resultBox"></div>
+
+</div>
+</div>
+
+<script>
+let currentLang=localStorage.getItem("lang")||"en";
+
+const t={
+en:{
+title:"Smart Ride Suggestion",
+distance:"Distance (km)",
+btn:"Get Suggestion",
+home:"Home",
+book:"Book",
+suggest:"Suggestions",
+bike:"Bike 🏍",
+auto:"Auto 🚕",
+car:"Car 🚗",
+cheap:"Cheapest option",
+fast:"Fastest option",
+safe:"Safest ride",
+msgBike:"Best for short distance, low traffic and saving money.",
+msgAuto:"Balanced option for medium distance and moderate traffic.",
+msgCar:"Recommended for long distance, heavy traffic or bad weather.",
+fare:"Estimated Fare: ₹"
+},
+bn:{
+title:"স্মার্ট সাজেশন",
+distance:"দূরত্ব (কিমি)",
+btn:"সাজেশন নিন",
+home:"হোম",
+book:"বুকিং",
+suggest:"সাজেশন",
+bike:"বাইক 🏍",
+auto:"অটো 🚕",
+car:"গাড়ি 🚗",
+cheap:"সবচেয়ে সস্তা",
+fast:"সবচেয়ে দ্রুত",
+safe:"সবচেয়ে নিরাপদ",
+msgBike:"কম দূরত্ব ও কম খরচের জন্য সেরা।",
+msgAuto:"মাঝারি দূরত্বের জন্য ভালো।",
+msgCar:"দীর্ঘ দূরত্ব বা খারাপ আবহাওয়ার জন্য সেরা।",
+fare:"ভাড়া: ₹"
+}
+};
+
+function toggleLanguage(){
+currentLang=currentLang==="en"?"bn":"en";
+localStorage.setItem("lang",currentLang);
+applyLang();
+}
+
+function applyLang(){
+let lang=t[currentLang];
+
+document.getElementById("title").innerText=lang.title;
+document.getElementById("distance").placeholder=lang.distance;
+document.getElementById("suggestBtn").innerText=lang.btn;
+
+document.getElementById("navHome").innerText=lang.home;
+document.getElementById("navBook").innerText=lang.book;
+document.getElementById("navSuggest").innerText=lang.suggest;
+
+document.getElementById("langBtn").innerText=currentLang==="en"?"EN":"বাংলা";
+}
+
+function suggestRide(){
+
+let d=parseFloat(document.getElementById("distance").value);
+let traffic=document.getElementById("traffic").value;
+let weather=document.getElementById("weather").value;
+
+let vehicle,msg,fare,tag;
+
+/* SMART LOGIC */
+if(d<=5 && traffic==="low" && weather==="clear"){
+vehicle="bike";
+msg=t[currentLang].msgBike;
+fare=50+d*10;
+tag=t[currentLang].cheap;
+}
+else if(d<=10 && traffic!=="high"){
+vehicle="auto";
+msg=t[currentLang].msgAuto;
+fare=100+d*15;
+tag=t[currentLang].fast;
+}
+else{
+vehicle="car";
+msg=t[currentLang].msgCar;
+fare=200+d*20;
+tag=t[currentLang].safe;
+}
+
+/* DISPLAY */
+let html=`
+<h3>${t[currentLang][vehicle]} Recommended</h3>
+<p>${msg}</p>
+<p><b>${t[currentLang].fare}${fare}</b></p>
+<div class="tag">${tag}</div>
+`;
+
+let box=document.getElementById("resultBox");
+box.innerHTML=html;
+box.style.display="block";
+}
+
+window.onload=applyLang;
+</script>
+
+</body>
+</html>

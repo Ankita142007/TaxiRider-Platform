@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ride History - Agomoni</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Noto+Sans+Bengali&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Poppins','Noto Sans Bengali',sans-serif;
+    background:
+    linear-gradient(rgba(0,0,0,0.85),rgba(0,0,0,0.6)),
+    url("https://plus.unsplash.com/premium_photo-1729936564623-147c3d6d0bd9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    background-size:cover;
+    background-position:center;
+    color:white;
+}
+
+/* NAVBAR */
+nav{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 35px;
+    background:rgba(0,0,0,0.6);
+    backdrop-filter:blur(10px);
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-right:15px;
+}
+
+nav a:hover{color:#ff7a00;}
+
+.lang-btn{
+    border:1px solid white;
+    padding:6px 12px;
+    border-radius:20px;
+    cursor:pointer;
+}
+
+/* MAIN */
+.container{
+    padding:100px 30px;
+}
+
+/* TITLE */
+h2{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+/* SUMMARY */
+.summary{
+    text-align:center;
+    margin-bottom:20px;
+    color:#ff7a00;
+    font-weight:bold;
+}
+
+/* CLEAR BUTTON */
+.clear-btn{
+    display:block;
+    margin:10px auto 30px;
+    padding:10px 20px;
+    background:#ff4500;
+    border:none;
+    border-radius:20px;
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.clear-btn:hover{
+    background:#ff7a00;
+}
+
+/* CARD */
+.ride{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    padding:20px;
+    border-radius:14px;
+    margin-bottom:18px;
+    border-left:4px solid #ff7a00;
+    box-shadow:0 0 10px rgba(255,122,0,0.2);
+    transition:0.3s;
+}
+
+.ride:hover{
+    transform:translateY(-5px);
+    box-shadow:0 0 20px rgba(255,122,0,0.4);
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:10px;
+}
+
+.vehicle{
+    color:#ff7a00;
+    font-weight:500;
+}
+
+.route{
+    font-weight:bold;
+    margin-bottom:6px;
+}
+
+.fare{
+    font-size:18px;
+    font-weight:bold;
+    color:#ff7a00;
+}
+
+.empty{
+    text-align:center;
+    margin-top:60px;
+    color:#aaa;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+<div>
+<a href="HomePage.html" id="navHome">Home</a>
+<a href="dashboard.html" id="navDash">Dashboard</a>
+<a href="history.html" id="navHistory">History</a>
+</div>
+
+<div class="lang-btn" onclick="toggleLanguage()" id="langBtn">EN</div>
+</nav>
+
+<div class="container">
+
+<h2 id="title">Ride History</h2>
+
+<div class="summary" id="summary"></div>
+
+<button class="clear-btn" onclick="clearHistory()" id="clearBtn">Clear History</button>
+
+<div id="rideList"></div>
+
+<div class="empty" id="emptyMsg">No rides yet</div>
+
+</div>
+
+<script>
+let currentLang = localStorage.getItem("lang") || "en";
+
+/* LANGUAGE */
+const t = {
+en:{
+title:"Ride History",
+empty:"No rides yet",
+home:"Home",
+dash:"Dashboard",
+history:"History",
+summary:"Total Rides: ",
+clear:"Clear History",
+confirm:"Are you sure you want to delete all ride history?",
+success:"History Cleared Successfully!"
+},
+bn:{
+title:"রাইড ইতিহাস",
+empty:"কোনো রাইড নেই",
+home:"হোম",
+dash:"ড্যাশবোর্ড",
+history:"ইতিহাস",
+summary:"মোট রাইড: ",
+clear:"সব মুছুন",
+confirm:"আপনি কি সমস্ত রাইড ইতিহাস মুছে ফেলতে চান?",
+success:"ইতিহাস সফলভাবে মুছে ফেলা হয়েছে!"
+}
+};
+
+function toggleLanguage(){
+currentLang = currentLang==="en" ? "bn" : "en";
+localStorage.setItem("lang",currentLang);
+applyLang();
+loadRides();
+}
+
+function applyLang(){
+let lang = t[currentLang];
+
+document.getElementById("title").innerText = lang.title;
+document.getElementById("emptyMsg").innerText = lang.empty;
+document.getElementById("clearBtn").innerText = lang.clear;
+
+document.getElementById("navHome").innerText = lang.home;
+document.getElementById("navDash").innerText = lang.dash;
+document.getElementById("navHistory").innerText = lang.history;
+
+document.getElementById("langBtn").innerText = currentLang==="en"?"EN":"বাংলা";
+}
+
+/* LOAD RIDES */
+function loadRides(){
+
+let rides = JSON.parse(localStorage.getItem("rides")) || [];
+let container = document.getElementById("rideList");
+
+container.innerHTML = "";
+
+/* SUMMARY */
+let totalFare = 0;
+rides.forEach(r=> totalFare += r.fare);
+
+document.getElementById("summary").innerText =
+t[currentLang].summary + rides.length + " | ₹" + totalFare;
+
+/* EMPTY */
+if(rides.length === 0){
+document.getElementById("emptyMsg").style.display="block";
+return;
+}
+
+document.getElementById("emptyMsg").style.display="none";
+
+/* SHOW RIDES */
+rides.slice().reverse().forEach(r=>{
+
+let icon = "🚗";
+if(r.vehicle==="bike") icon="🏍";
+if(r.vehicle==="auto") icon="🚕";
+
+let html = `
+<div class="ride">
+    <div class="top">
+        <div class="vehicle">${icon} ${r.vehicle.toUpperCase()}</div>
+        <div>${r.date || ""}</div>
+    </div>
+
+    <div class="route">📍 ${r.from} → ${r.to}</div>
+
+    <div class="fare">₹${r.fare}</div>
+</div>
+`;
+
+container.innerHTML += html;
+
+});
+}
+
+/* CLEAR HISTORY (FIXED ✅) */
+function clearHistory(){
+
+try{
+
+/* CONFIRM */
+let confirmMsg = currentLang==="en"
+? "Are you sure you want to delete all ride history?"
+: "আপনি কি সমস্ত রাইড ইতিহাস মুছে ফেলতে চান?";
+
+if(!confirm(confirmMsg)) return;
+
+/* 🔥 CLEAR DATA PROPERLY */
+localStorage.removeItem("rides");
+
+/* 🔥 FORCE RESET */
+localStorage.setItem("rides", JSON.stringify([]));
+
+/* 🔥 RELOAD PAGE (MOST RELIABLE) */
+location.reload();
+
+}catch(e){
+console.log("Error:", e);
+alert("Something went wrong");
+}
+
+}
+
+
+/* INIT */
+window.onload = function(){
+applyLang();
+loadRides();
+};
+</script>
+
+</body>
+</html>
